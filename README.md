@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  Portfolio OS: Senior Product Designer Edition
 
-## Getting Started
+###  High-Level Vision
 
-First, run the development server:
+A high-fidelity, interactive portfolio built for the 2026 design market. It combines the **Playground/Vercel** aesthetic—clean typography, subtle blurs, and physics-based interactions—with the rigorous case study structure required by **Big Tech (Google, Stripe, Airbnb) recruiters.**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+> **Status:** Phase 1 - Core Architecture & Shell (Placeholder Content)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+###  Design Language (The "Vibe")
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* **Aesthetic:** "Premium Editorial." Think high-contrast, large-scale typography, and heavy use of whitespace.
+* **Interactions:** Using **21st.dev** and **Framer Motion** for spring-based transitions, magnetic buttons, and glassmorphism.
+* **Theme:** Dual-mode (System preference) with a "Deep Midnight" dark mode and "Paper White" light mode.
+* **Grid:** 12-column flexible grid with strict adherence to **8px spacing systems**.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+### 🛠 Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* **Framework:** Next.js 15 (App Router)
+* **Styling:** Tailwind CSS + Lucide Icons
+* **Components:** 21st.dev + Radix UI (for accessibility)
+* **Animations:** Framer Motion
+* **Content:** Local MDX (Phase 1) → Headless CMS (Phase 2)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+###  Information Architecture (The Sitemap)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Route | Content Focus | Component Goal |
+| --- | --- | --- |
+| `/hero` | **The Hook.** Hero, Bento-grid of expertise, and "Selected Work" previews. | High-impact visual entry. |
+| `/work` | **The Proof.** 2-3 Deep-dive placeholders using a long-form scroll template. | Narrative-heavy, S.T.A.R. format. |
+| `/about` | **The Human.** Experience timeline, "Life Lately," and tech stack. | Social proof & Personality. |
+| `/contact` | **The Conversion.** Minimal form + "Available for" status indicator. | Frictionless CTA. |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+###  Implementation Roadmap
+
+#### Phase 1: Foundation (Current)
+
+* [ ] Setup Next.js with Tailwind and Framer Motion.
+* [ ] Build **Navigation Bar**: Floating "Dock" style or minimalist glass header.
+* [ ] Build **Hero Section**: Typographic-led with a 21st.dev "Sparkle" or "Noise" effect.
+* [ ] Build **Footer**: High-utility footer with local time and status.
+
+#### Phase 2: Shells & Placeholders
+
+* [ ] Create a **Case Study Template**: Vertical scroll with sticky sidebars for "Role, Tools, Outcome."
+* [ ] Build the **Testimonial Slider**: Micro-interaction focused cards.
+* [ ] Build **Experience Component**: Clean vertical timeline with auto-layout.
+
+#### Phase 3: Content Injection
+
+* [ ] Replace placeholders with actual JSON/MDX data for the 3 main projects.
+
+---
+
+###  Strategic UX Writing (Microcopy Guidelines)
+
+* **Voice:** Professional yet approachable. Avoid "Design Evangelist" fluff.
+* **Keywords:** Scalable Systems, Cross-functional Leadership, Data-Driven, User-Centric.
+* **CTA:** Instead of "Send Message," use "Start a Conversation" or "Let’s Build Something."
+
+---
+
+###  Claude Code Commands (Quick Start)
+
+To maintain the "vibe coding" flow, use these prompts for the next steps:
+
+* *"Scaffold the project directory using App Router and a /components/ui folder for 21st.dev components."*
+* *"Create a responsive navigation bar that hides on scroll and uses a glassmorphism background."*
+* *"Implement a Hero section with a magnetic CTA button and an H1 using a premium serif font."*
+
+---
