@@ -44,7 +44,7 @@ export default function AboutPage() {
           </motion.div>
           <motion.div
             ref={testimonialRef}
-            className="mx-auto max-w-[var(--max-width-container)] mt-8 sm:mt-16"
+            className="mt-8 sm:mt-16"
             variants={fadeUp}
             initial="hidden"
             animate={testimonialInView ? "visible" : "hidden"}

@@ -9,7 +9,7 @@ const geistMono = Geist_Mono({
 
 
 export const metadata: Metadata = {
-  title: "Portfolio — Senior Product Designer",
+  title: "Portfolio — Pedro Garcia",
   description:
     "Senior Product Designer crafting scalable, user-centric digital experiences for Big Tech.",
 };

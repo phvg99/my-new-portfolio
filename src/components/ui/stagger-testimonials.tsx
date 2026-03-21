@@ -45,13 +45,15 @@ interface TestimonialCardProps {
   testimonial: typeof testimonials[0];
   onClick: () => void;
   cardSize: number;
+  spacing: number;
 }
 
 const TestimonialCard: React.FC<TestimonialCardProps> = ({
   position,
   testimonial,
   onClick,
-  cardSize
+  cardSize,
+  spacing
 }) => {
   const isCenter = position === 0;
 
@@ -71,7 +73,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
         clipPath: `polygon(50px 0%, calc(100% - 50px) 0%, 100% 50px, 100% 100%, calc(100% - 50px) 100%, 50px 100%, 0 100%, 0 0)`,
         transform: `
           translate(-50%, -50%)
-          translateX(${(cardSize / 1.5) * position}px)
+          translateX(${spacing * position}px)
           translateY(${isCenter ? -65 : position % 2 ? 15 : -15}px)
           rotate(${isCenter ? 0 : position % 2 ? 2.5 : -2.5}deg)
         `,
@@ -115,6 +117,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 
 export const StaggerTestimonials: React.FC = () => {
   const [cardSize, setCardSize] = useState<number | null>(null);
+  const [viewportWidth, setViewportWidth] = useState<number>(1280);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const n = testimonials.length;
@@ -127,8 +130,15 @@ export const StaggerTestimonials: React.FC = () => {
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
     const updateSize = () => {
-      const { matches } = window.matchMedia("(min-width: 640px)");
-      setCardSize(matches ? 365 : 290);
+      const width = window.innerWidth;
+      setViewportWidth(width);
+      if (width >= 1440) {
+        setCardSize(400);
+      } else if (width >= 640) {
+        setCardSize(365);
+      } else {
+        setCardSize(290);
+      }
     };
     const debouncedUpdate = () => {
       clearTimeout(timeoutId);
@@ -147,6 +157,10 @@ export const StaggerTestimonials: React.FC = () => {
     return <div className="relative w-full bg-muted/30" style={{ height: 600 }} />;
   }
 
+  const baseSpacing = cardSize / 1.5;
+  const scaleFactor = Math.max(1, Math.min(viewportWidth / 1280, 1.5));
+  const spacing = baseSpacing * scaleFactor;
+
   return (
     <div
       className="relative w-full overflow-hidden bg-muted/30"
@@ -162,6 +176,7 @@ export const StaggerTestimonials: React.FC = () => {
             onClick={() => handleMove(position)}
             position={position}
             cardSize={cardSize}
+            spacing={spacing}
           />
         );
       })}
