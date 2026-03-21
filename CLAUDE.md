@@ -8,47 +8,68 @@ Senior Product Designer portfolio for the 2026 market. Premium editorial aesthet
 
 | File | Purpose |
 |------|---------|
-| `README.md` | General project vision, design language, and implementation roadmap |
-| `Technical.md` | Technical stack guidelines, folder architecture, and development standards |
+| `docs/README.md` | General project vision, design language, and implementation roadmap |
+| `docs/Technical.md` | Technical stack guidelines, folder architecture, and development standards |
 
 ## Tech Stack
 
-Next.js 15 (App Router) · TypeScript (strict) · Tailwind CSS · shadcn/ui ("New York" style) · Framer Motion · Lucide React · Local MDX (Phase 1) → Headless CMS (Phase 2)
+Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS v4 (CSS-first) · shadcn 4 ("base-nova" style) · motion 12 (motion/react) · Lucide React · @base-ui/react · Local TS data (Phase 1) → Headless CMS (Phase 2)
 
 ## Folder Structure
 
 ```
 src/
-├── app/              # Routes and pages
+├── app/
+│   ├── layout.tsx          # Root layout (dark-only, Geist Mono font)
+│   ├── page.tsx            # Home: Hero + Navigation + Footer
+│   ├── globals.css         # Tailwind v4 theme tokens (OKLCH, tracking scale)
+│   ├── about/page.tsx
+│   └── work/
+│       ├── page.tsx        # Project listing
+│       └── [slug]/page.tsx # Dynamic case study (bluz, juntos, innoscience)
 ├── components/
-│   ├── ui/           # Atomic shadcn components
-│   └── 21st/         # Complex 21st.dev blocks
-└── lib/utils.ts      # cn() and shared utilities
+│   ├── ui/           # Atomic shadcn components (button, avatar, tilt, wave-path, etc.)
+│   ├── 21st/         # Complex 21st.dev blocks (text-cursor-proximity)
+│   ├── hero.tsx
+│   ├── navigation.tsx
+│   ├── footer.tsx
+│   ├── selected-projects.tsx
+│   ├── about-services.tsx
+│   └── case-study-content.tsx
+├── lib/
+│   ├── utils.ts      # cn() helper
+│   ├── motion.ts     # fadeUp, stagger variants + useReliableInView hook
+│   └── projects.ts   # Project data, types, getProjectBySlug, getCaseStudyBySlug
+└── hooks/
+    └── use-mouse-position-ref.ts
 ```
 
 ## Code Conventions
 
 1. Always use `cn()` from `@/lib/utils` for conditional classes — never raw string concatenation
-2. Use Tailwind CSS variables (`bg-background`, `text-foreground`) for dark/light mode
-3. `"use client"` only for interactivity (Framer Motion, hooks, events). Default to Server Components.
-4. Define Framer Motion animation variants explicitly
+2. Use Tailwind CSS variables (`bg-background`, `text-foreground`) for theming
+3. `"use client"` only for interactivity (motion/react, hooks, events). Default to Server Components.
+4. Define motion animation variants in lib/motion.ts; reuse fadeUp + stagger
 5. Use `@/components/...` import aliases everywhere
 
 ## Design Language
 
 - **Grid:** 12-column, 8px spacing system
-- **Theme:** "Deep Midnight" dark / "Paper White" light (system preference default)
+- **Theme:** "Deep Midnight" dark-only palette (OKLCH color space, no light mode)
 - **Interactions:** Spring transitions, magnetic buttons, glassmorphism, subtle blurs
-- **Typography:** Large-scale, high-contrast, premium serif headings
+- **Typography:** Helvetica Neue system font stack (Neo-Grotesque). Custom tracking scale (display, heading, body, label). No web fonts — zero FOUT.
+- **Container:** 1280px max-width (`--max-width-container`)
 
 ## Routes
 
 | Route | Purpose |
 |-------|---------|
-| `/hero` | Hero, bento grid of expertise, selected work previews |
-| `/work` | Case studies (S.T.A.R. format, sticky sidebars) |
-| `/about` | Experience timeline, "Life Lately," tech stack |
-| `/contact` | Minimal form + "Available for" status |
+| `/` | Home: Hero, Navigation, Footer |
+| `/work` | Project listing (SelectedProjects grid with Tilt effect) |
+| `/work/[slug]` | Dynamic case study pages (bluz, juntos, innoscience) |
+| `/about` | Testimonials, services, wave divider |
+
+**Planned (not yet built):** `/contact` — Minimal form + "Available for" status
 
 ## Microcopy
 
@@ -76,7 +97,8 @@ Stop after 3 failed fixes — likely architectural. Discuss first.
 ### Linting (Mandatory after every change)
 
 ```bash
-npm run lint && npx tsc --noEmit
+npm run lint          # ESLint only
+npx tsc --noEmit     # Type check (run separately)
 ```
 
 No code is "done" until all checks pass.
@@ -196,3 +218,51 @@ Defense-in-depth · Least privilege · Never trust input · Validate at boundari
 **Case Study:** Hero image → overview → challenge → role → process → decisions → results → links
 
 **Anti-Patterns:** Template look (add personal touches) · All style no substance (depth > breadth) · Resume website (show, don't tell)
+
+---
+
+## Design References
+
+### Live Reference: Small Studio (Framer Template)
+
+**URL:** https://smallstudio.framer.website/
+
+- **Aesthetic:** Minimalist editorial — generous whitespace, restrained color palette, typography-first
+- **Typography:** "Cactus Classical Serif" for headings (editorial feel), sans-serif body at small sizes
+- **Colors:** Near-black text (`rgb(3,3,3)`) on white, soft grays (`rgb(105,105,105)`, `rgb(242,242,242)`) for accents
+- **Layout:** Responsive 3-breakpoint system (desktop 1200px+, tablet 810–1199px, mobile <810px)
+- **Spacing:** Extremely generous margins and padding — content breathes
+- **Vibe:** Sophisticated, globally-oriented, editorial elegance for creative professionals
+
+### Static References: OX Studio (`references/` folder)
+
+**`reference_01.png`** — Homepage / studio overview:
+
+- **Navigation:** Minimal top nav — logo left ("OX+Crew"), links right (Work, Projects, Services, Contact)
+- **Hero:** Large serif headline ("Hey, We design meaningful experiences that connect people and ideas worldwide") with animated emoji accents — bold, personal, statement-driven
+- **Selected Projects:** Grid of project cards with varied aspect ratios, muted image tones, hover reveals with project metadata (role, tools)
+- **About Block:** Two-column — left image, right text paragraph. Warm, human tone. Pull-quote with subtle background card
+- **Services:** Clean numbered list (Web Design, Branding, Graphic Design) — minimal, no icons
+- **Awards:** Dark section with recognitions, subtle badges/logos
+- **Footer CTA:** Dark background, large serif text ("Let's discuss how we can make your product better"), centered button. Giant watermark "OxStudio" text bleeds across bottom edge
+
+**`reference_2.png`** — Case study / project page:
+
+- **Breadcrumb:** "Work >" prefix before project title
+- **Project Header:** Large serif title ("RankAI Web Platform — Web Design for an AI-Powered SEO SaaS to Drive Conversions"), right-aligned metadata sidebar (Role, Tools, Timeline)
+- **Hero Image:** Full-width project mockup/screenshot with rounded corners
+- **Process Gallery:** Mixed-media grid — 3D renders, textures, abstract visuals. Varied aspect ratios, generous gaps
+- **Footer:** Same dark CTA block and watermark as homepage
+
+### Design Patterns to Extract
+
+| Pattern | Reference | Apply As |
+|---------|-----------|----------|
+| Large serif hero headlines | Both references + Small Studio | Premium serif headings with high contrast |
+| Minimal numbered services | reference_01 | Clean service/expertise listings |
+| Dark CTA footer with watermark | Both OX references | Bold footer section with personality |
+| Project metadata sidebar | reference_02 | Sticky sidebar on case study pages |
+| Mixed-media process gallery | reference_02 | Visual storytelling in case studies |
+| Generous whitespace | All references | Breathing room between all sections |
+| Warm, human tone in copy | reference_01 about block | Professional yet approachable voice |
+| Muted image tones in grids | reference_01 projects | Cohesive visual treatment for project cards |

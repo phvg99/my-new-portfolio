@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
@@ -16,6 +16,7 @@ interface AnimatedGridPatternProps {
   maxOpacity?: number;
   duration?: number;
   repeatDelay?: number;
+  maxCycles?: number;
 }
 
 function getRandomPos(
@@ -54,11 +55,14 @@ export function AnimatedGridPattern({
   maxOpacity = 0.5,
   duration = 4,
   repeatDelay = 1,
+  maxCycles = 3,
   ...props
 }: AnimatedGridPatternProps) {
   const id = useId();
   const containerRef = useRef<SVGSVGElement>(null);
   const dimensionsRef = useRef({ width: 0, height: 0 });
+  const cycleCountRef = useRef(new Map<number, number>());
+  const shouldReduceMotion = useReducedMotion();
   const [squares, setSquares] = useState(() =>
     Array.from({ length: numSquares }, (_, i) => ({
       id: i,
@@ -71,16 +75,20 @@ export function AnimatedGridPattern({
 
   const scheduleUpdate = useCallback(
     (squareId: number) => {
+      const count = (cycleCountRef.current.get(squareId) ?? 0) + 1;
+      cycleCountRef.current.set(squareId, count);
+      if (count >= maxCycles) return;
+
       pendingUpdates.current.push(squareId);
       if (!flushRef.current) {
         flushRef.current = requestAnimationFrame(() => {
-          const ids = [...pendingUpdates.current];
+          const idSet = new Set(pendingUpdates.current);
           pendingUpdates.current = [];
           flushRef.current = null;
           const dims = dimensionsRef.current;
           setSquares((prev) =>
             prev.map((sq) =>
-              ids.includes(sq.id)
+              idSet.has(sq.id)
                 ? {
                     ...sq,
                     pos: getRandomPos(dims.width, dims.height, width, height),
@@ -91,7 +99,7 @@ export function AnimatedGridPattern({
         });
       }
     },
-    [width, height],
+    [width, height, maxCycles],
   );
 
   useEffect(() => {
@@ -158,27 +166,40 @@ export function AnimatedGridPattern({
       </defs>
       <rect width="100%" height="100%" fill={`url(#${id})`} />
       <svg x={x} y={y} className="overflow-visible">
-        {squares.map(({ pos: [px, py], id: squareId }, index) => (
-          <motion.rect
-            initial={{ opacity: 0 }}
-            animate={{ opacity: maxOpacity }}
-            transition={{
-              duration,
-              repeat: 1,
-              delay: index * 0.1,
-              repeatType: "reverse",
-              repeatDelay,
-            }}
-            onAnimationComplete={() => scheduleUpdate(squareId)}
-            key={`${px}-${py}-${index}`}
-            width={width - 1}
-            height={height - 1}
-            x={px * width + 1}
-            y={py * height + 1}
-            fill="currentColor"
-            strokeWidth="0"
-          />
-        ))}
+        {squares.map(({ pos: [px, py], id: squareId }, index) =>
+          shouldReduceMotion ? (
+            <rect
+              key={`${px}-${py}-${index}`}
+              opacity={maxOpacity * 0.5}
+              width={width - 1}
+              height={height - 1}
+              x={px * width + 1}
+              y={py * height + 1}
+              fill="currentColor"
+              strokeWidth="0"
+            />
+          ) : (
+            <motion.rect
+              initial={{ opacity: 0 }}
+              animate={{ opacity: maxOpacity }}
+              transition={{
+                duration,
+                repeat: 1,
+                delay: index * 0.1,
+                repeatType: "reverse",
+                repeatDelay,
+              }}
+              onAnimationComplete={() => scheduleUpdate(squareId)}
+              key={`${px}-${py}-${index}`}
+              width={width - 1}
+              height={height - 1}
+              x={px * width + 1}
+              y={py * height + 1}
+              fill="currentColor"
+              strokeWidth="0"
+            />
+          ),
+        )}
       </svg>
     </svg>
   );

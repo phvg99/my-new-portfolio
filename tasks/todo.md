@@ -8,10 +8,10 @@
 - [x] Add serif font (Playfair Display) for headings
 
 ## Phase 1: Core Shell
-- [ ] Build Navigation Bar — floating dock or glassmorphism header
-- [ ] Build Hero Section — typographic-led with premium serif, magnetic CTA
-- [ ] Build Footer — high-utility with local time and status
-- [ ] Implement dark/light mode toggle
+- [x] Build Navigation Bar — glassmorphism floating header
+- [x] Build Hero Section — typographic-led with premium serif, magnetic CTA
+- [x] Build Footer — high-utility with local time and status
+- [x] Implement dark/light mode toggle
 
 ## Phase 2: Shells & Placeholders
 - [ ] Create Case Study Template — vertical scroll, sticky sidebars (S.T.A.R.)

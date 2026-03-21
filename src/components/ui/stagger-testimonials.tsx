@@ -59,7 +59,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
     <div
       onClick={onClick}
       className={cn(
-        "absolute left-1/2 top-1/2 cursor-pointer border-2 p-8 transition-all duration-500 ease-in-out",
+        "absolute left-1/2 top-1/2 flex flex-col cursor-pointer border-2 p-8 transition-all duration-500 ease-in-out",
         isCenter
           ? "z-10 bg-primary text-primary-foreground border-primary"
           : "z-0 bg-card text-card-foreground border-border hover:border-primary/50"
@@ -98,13 +98,13 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
         }}
       />
       <h3 className={cn(
-        "text-base sm:text-xl font-medium",
+        "flex-1 overflow-hidden text-base sm:text-xl font-medium",
         isCenter ? "text-primary-foreground" : "text-foreground"
       )}>
         &ldquo;{testimonial.testimonial}&rdquo;
       </h3>
       <p className={cn(
-        "absolute bottom-8 left-8 right-8 mt-2 text-sm italic",
+        "mt-auto pt-2 text-sm italic",
         isCenter ? "text-primary-foreground/80" : "text-muted-foreground"
       )}>
         - {testimonial.by}
@@ -114,7 +114,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 };
 
 export const StaggerTestimonials: React.FC = () => {
-  const [cardSize, setCardSize] = useState(365);
+  const [cardSize, setCardSize] = useState<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const n = testimonials.length;
@@ -142,6 +142,10 @@ export const StaggerTestimonials: React.FC = () => {
       window.removeEventListener("resize", debouncedUpdate);
     };
   }, []);
+
+  if (cardSize === null) {
+    return <div className="relative w-full bg-muted/30" style={{ height: 600 }} />;
+  }
 
   return (
     <div

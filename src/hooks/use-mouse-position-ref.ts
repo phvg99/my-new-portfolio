@@ -22,13 +22,32 @@ export const useMousePositionRef = (
       }
     };
 
+    let ticking = false;
+    const staged = { x: 0, y: 0 };
+
     const handleMouseMove = (ev: MouseEvent) => {
-      updatePosition(ev.clientX, ev.clientY);
+      staged.x = ev.clientX;
+      staged.y = ev.clientY;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          updatePosition(staged.x, staged.y);
+          ticking = false;
+        });
+      }
     };
 
     const handleTouchMove = (ev: TouchEvent) => {
       const touch = ev.touches[0];
-      updatePosition(touch.clientX, touch.clientY);
+      staged.x = touch.clientX;
+      staged.y = touch.clientY;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          updatePosition(staged.x, staged.y);
+          ticking = false;
+        });
+      }
     };
 
     // Initial rect cache

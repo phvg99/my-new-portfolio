@@ -54,7 +54,7 @@ export function Footer() {
           {/* Social links */}
           <div className="flex flex-col gap-2">
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/pedrohvg/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn profile"
@@ -99,8 +99,7 @@ export function Footer() {
         <div className="border-t border-background/10 pt-6">
           <div className="flex w-full flex-col items-center justify-between gap-2 text-xs text-background/30 sm:flex-row">
             <span>
-              &copy; {new Date().getFullYear()} Portfolio OS. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} All rights reserved.
             </span>
             <span>Designed & built with care.</span>
           </div>
