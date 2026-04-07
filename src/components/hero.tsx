@@ -19,6 +19,7 @@ export function Hero() {
         repeatDelay={1}
         className={cn(
           "z-10 fill-white/15 stroke-white/30",
+          "[-webkit-mask-image:radial-gradient(ellipse_100%_100%_at_center,white_60%,transparent)]",
           "[mask-image:radial-gradient(ellipse_100%_100%_at_center,white_60%,transparent)]",
           "inset-x-0 inset-y-[-30%] h-[200%] skew-y-12",
         )}

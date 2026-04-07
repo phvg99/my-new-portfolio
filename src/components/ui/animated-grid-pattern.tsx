@@ -146,6 +146,7 @@ export function AnimatedGridPattern({
         "pointer-events-none absolute inset-0 h-full w-full fill-gray-400/30 stroke-gray-400/30",
         className,
       )}
+      style={{ color: "rgba(255, 255, 255, 0.15)" }}
       {...props}
     >
       <defs>
@@ -160,6 +161,7 @@ export function AnimatedGridPattern({
           <path
             d={`M.5 ${height}V.5H${width}`}
             fill="none"
+            stroke="rgba(156, 163, 175, 0.3)"
             strokeDasharray={strokeDasharray}
           />
         </pattern>

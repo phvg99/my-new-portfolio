@@ -447,6 +447,19 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
               >
                 {data.results.description}
               </motion.p>
+              {data.results.documentationUrl && (
+                <motion.div className="mt-8" variants={fadeUp}>
+                  <a
+                    href={data.results.documentationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-foreground transition-colors hover:text-muted-foreground"
+                  >
+                    View Full Documentation
+                    <ArrowUpRight size={14} />
+                  </a>
+                </motion.div>
+              )}
             </div>
 
             {/* Right: image */}

@@ -44,7 +44,7 @@ export interface CaseStudyData {
     imageUrl?: string;
     imageUrls?: string[];
   }>;
-  results: { description: string };
+  results: { description: string; documentationUrl?: string };
   features?: FeatureModule[];
 }
 
@@ -110,6 +110,8 @@ const INNOSCIENCE_CASE_STUDY: CaseStudyData = {
   results: {
     description:
       "The redesigned platform unified three previously disconnected workflows into a single coherent product. By end of 2024, internal satisfaction hit 99% — reflecting the cumulative impact of streamlined project management, intelligent diagnostics, and frictionless navigation.",
+    documentationUrl:
+      "https://pedrohgarcia.notion.site/Innoscience-Task-Manager-Framework-and-navegation-EN-245072a1953480309462e7e1443aa775",
   },
   features: [
     {
@@ -280,6 +282,8 @@ const BLUZ_CASE_STUDY: CaseStudyData = {
   results: {
     description:
       "Consistent interfaces across all platforms, stronger brand recognition, and significantly faster development cycles. Reusable components streamlined onboarding and accelerated delivery. The system proved itself as a living organism — constantly evolving and laying the foundation for future growth.",
+    documentationUrl:
+      "https://pedrohgarcia.notion.site/b-luz-Design-System-EN-fe578d4dec90490088eb44c8f6c5104d",
   },
 };
 
@@ -339,6 +343,8 @@ const JUNTOS_CASE_STUDY: CaseStudyData = {
   results: {
     description:
       "Usability testing confirmed the core thesis: children engage more when digital spaces feel like school, not spreadsheets. Students navigated the interface intuitively, participation rose visibly, and the project earned the highest grade in the graduating class.",
+    documentationUrl:
+      "https://pedrohgarcia.notion.site/Juntos-Remote-Learning-Platform-for-Children-EN-b64287f7497e47558eb9f7544d5761fb",
   },
 };
 
