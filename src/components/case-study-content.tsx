@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { assetPath, cn } from "@/lib/utils";
-import { fadeUp, stagger, useReliableInView } from "@/lib/motion";
+import { fadeUp, stagger, useHasMounted, useReveal } from "@/lib/motion";
 import type { CaseStudyData, FeatureModule } from "@/lib/projects";
 import { ImageCarousel } from "@/components/ui/image-carousel";
 import { useTranslation } from "@/components/providers/language-provider";
@@ -89,7 +89,7 @@ function FeatureModuleSection({
 }) {
   const t = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useReliableInView(ref, { margin: "-80px" });
+  const reveal = useReveal(ref, { margin: "-80px" });
 
   return (
     <section className="px-6 py-24 md:py-32">
@@ -97,8 +97,7 @@ function FeatureModuleSection({
         ref={ref}
         className="mx-auto max-w-[var(--max-width-container)]"
         variants={stagger}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        {...reveal}
       >
         {/* Module header */}
         <motion.p
@@ -184,7 +183,7 @@ function SolutionSection({
   bgColor: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useReliableInView(ref, { margin: "-80px" });
+  const reveal = useReveal(ref, { margin: "-80px" });
 
   return (
     <section className="px-6 py-24 md:py-32">
@@ -192,8 +191,7 @@ function SolutionSection({
         ref={ref}
         className="mx-auto max-w-[var(--max-width-container)]"
         variants={stagger}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
+        {...reveal}
       >
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
           {/* Left: solution text */}
@@ -238,14 +236,16 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
   const t = useTranslation();
   const { project } = data;
 
+  const mounted = useHasMounted();
+
   const headerRef = useRef<HTMLDivElement>(null);
-  const headerInView = useReliableInView(headerRef, { margin: "-80px" });
+  const headerReveal = useReveal(headerRef, { margin: "-80px" });
 
   const problemRef = useRef<HTMLDivElement>(null);
-  const problemInView = useReliableInView(problemRef, { margin: "-80px" });
+  const problemReveal = useReveal(problemRef, { margin: "-80px" });
 
   const resultsRef = useRef<HTMLDivElement>(null);
-  const resultsInView = useReliableInView(resultsRef, { margin: "-80px" });
+  const resultsReveal = useReveal(resultsRef, { margin: "-80px" });
 
   return (
     <>
@@ -254,7 +254,7 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
         <nav className="mx-auto max-w-[var(--max-width-container)]" aria-label="Breadcrumb">
           <motion.p
             variants={fadeUp}
-            initial="hidden"
+            initial={mounted ? "hidden" : "visible"}
             animate="visible"
             className="font-mono text-xs uppercase tracking-loose text-white/56"
           >
@@ -276,8 +276,7 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
           ref={headerRef}
           className="mx-auto max-w-[var(--max-width-container)]"
           variants={stagger}
-          initial="hidden"
-          animate={headerInView ? "visible" : "hidden"}
+          {...headerReveal}
         >
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
             {/* Left: text */}
@@ -347,8 +346,7 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
           ref={problemRef}
           className="mx-auto max-w-[var(--max-width-container)]"
           variants={stagger}
-          initial="hidden"
-          animate={problemInView ? "visible" : "hidden"}
+          {...problemReveal}
         >
           <div className={cn("grid grid-cols-1 gap-8", data.mainProblemImageUrl && "lg:grid-cols-2 lg:gap-16")}>
             {/* Left: problem details */}
@@ -413,8 +411,7 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
           ref={resultsRef}
           className="mx-auto max-w-[var(--max-width-container)]"
           variants={stagger}
-          initial="hidden"
-          animate={resultsInView ? "visible" : "hidden"}
+          {...resultsReveal}
         >
           <div className={cn("grid grid-cols-1 gap-8", data.resultsImageUrl && "lg:grid-cols-2 lg:gap-16")}>
             {/* Left: results text */}

@@ -3,13 +3,13 @@
 import { useRef } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import { fadeUp, stagger, useReliableInView } from "@/lib/motion";
+import { fadeUp, stagger, useReveal } from "@/lib/motion";
 import { useTranslation } from "@/components/providers/language-provider";
 
 export function AboutServices() {
   const t = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useReliableInView(ref, { margin: "-80px" });
+  const reveal = useReveal(ref, { margin: "-80px" });
 
   return (
     <>
@@ -19,8 +19,7 @@ export function AboutServices() {
           ref={ref}
           className="mx-auto max-w-[var(--max-width-container)]"
           variants={stagger}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
+          {...reveal}
         >
           {/* Label + Paragraph grid */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[200px_1fr] md:gap-12">

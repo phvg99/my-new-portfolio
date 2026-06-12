@@ -4,16 +4,16 @@ import { useRef } from "react";
 import { motion } from "motion/react";
 import { AboutServices } from "@/components/about-services";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-import { fadeUp, stagger, useReliableInView } from "@/lib/motion";
+import { fadeUp, stagger, useReveal } from "@/lib/motion";
 import { useTranslation } from "@/components/providers/language-provider";
 
 export function AboutSection() {
   const t = useTranslation();
   const headingRef = useRef<HTMLDivElement>(null);
-  const headingInView = useReliableInView(headingRef, { margin: "-80px" });
+  const headingReveal = useReveal(headingRef, { margin: "-80px" });
 
   const testimonialRef = useRef<HTMLDivElement>(null);
-  const testimonialInView = useReliableInView(testimonialRef, { margin: "-80px" });
+  const testimonialReveal = useReveal(testimonialRef, { margin: "-80px" });
 
   return (
     <section id="about" className="scroll-mt-24">
@@ -26,8 +26,7 @@ export function AboutSection() {
           ref={headingRef}
           className="mx-auto flex max-w-[var(--max-width-container)] flex-col items-center gap-4 text-center sm:gap-16 px-4"
           variants={stagger}
-          initial="hidden"
-          animate={headingInView ? "visible" : "hidden"}
+          {...headingReveal}
         >
           <motion.div className="flex flex-col items-center gap-4 sm:gap-8" variants={fadeUp}>
             <h2 className="max-w-[720px] font-display text-4xl leading-tight text-white sm:text-6xl sm:leading-tight">
@@ -42,8 +41,7 @@ export function AboutSection() {
           ref={testimonialRef}
           className="mt-8 sm:mt-16"
           variants={fadeUp}
-          initial="hidden"
-          animate={testimonialInView ? "visible" : "hidden"}
+          {...testimonialReveal}
         >
           <StaggerTestimonials />
         </motion.div>

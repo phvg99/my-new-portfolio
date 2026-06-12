@@ -10,6 +10,7 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { cn } from "@/lib/utils";
+import { useHasMounted } from "@/lib/motion";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useLanguage } from "@/components/providers/language-provider";
 
@@ -53,6 +54,7 @@ export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useActiveSection(navSections);
   const reduceMotion = useReducedMotion();
+  const mounted = useHasMounted();
   const { locale, setLocale, t } = useLanguage();
 
   const navLinks = [
@@ -78,7 +80,7 @@ export function Navigation() {
         scrolled ? "bg-blue-deep border-border" : "bg-transparent border-transparent"
       )}
       variants={navVariants}
-      initial="hidden"
+      initial={mounted ? "hidden" : "visible"}
       animate="visible"
     >
       <nav

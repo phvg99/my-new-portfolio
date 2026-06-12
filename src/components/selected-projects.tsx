@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { assetPath, cn } from "@/lib/utils";
-import { fadeUp, stagger, useReliableInView } from "@/lib/motion";
+import { fadeUp, stagger, useReveal } from "@/lib/motion";
 import { getProjects, type Project } from "@/lib/projects";
 import { useLanguage } from "@/components/providers/language-provider";
 
@@ -58,10 +58,10 @@ export function SelectedProjects() {
   const projects = getProjects(locale);
 
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const headingInView = useReliableInView(headingRef, { margin: "-40px" });
+  const headingReveal = useReveal(headingRef, { margin: "-40px" });
 
   const gridRef = useRef<HTMLDivElement>(null);
-  const gridInView = useReliableInView(gridRef, { margin: "-80px" });
+  const gridReveal = useReveal(gridRef, { margin: "-80px" });
 
   return (
     <section id="work" className="scroll-mt-24 px-6 py-24 md:py-32">
@@ -71,8 +71,7 @@ export function SelectedProjects() {
           ref={headingRef}
           className="mb-12 font-display text-5xl text-white md:mb-16 md:text-7xl"
           variants={fadeUp}
-          initial="hidden"
-          animate={headingInView ? "visible" : "hidden"}
+          {...headingReveal}
         >
           {t.projects.heading}
         </motion.h2>
@@ -82,8 +81,7 @@ export function SelectedProjects() {
           ref={gridRef}
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8"
           variants={stagger}
-          initial="hidden"
-          animate={gridInView ? "visible" : "hidden"}
+          {...gridReveal}
         >
           {projects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
