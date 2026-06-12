@@ -79,3 +79,10 @@ A high-fidelity, interactive portfolio built for the 2026 design market. It comb
 * `npx tsc --noEmit` — Type check
 
 ---
+
+###  Re-Design Direction
+
+* **[Design System Analysis](design-system-analysis.md)** — Study of the "Stephanie" *retro-editorial boldness* design system (electric blue canvas, Playfair Display Italic + JetBrains Mono, pixel-art decoration) that will drive the upcoming re-design. Includes token tables, component inventory, a gap analysis vs the current Deep Midnight build, and a migration roadmap.
+* **Bundle:** [`references/stephanie-design-system/`](../references/stephanie-design-system/) — the saved Claude Design handoff (tokens, assets, UI kit, screenshots).
+
+---

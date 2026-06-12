@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), 'Helvetica Neue', 'Helvetica', 'Arial', system-ui, sans-serif;
-
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jetbrains-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --font-mono: var(--font-jetbrains-mono), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --font-display: var(--font-playfair), "Cormorant Garamond", Georgia, serif;
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -26,68 +26,166 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-  --animate-rainbow: rainbow var(--speed, 2s) infinite linear;
-  --color-color-1: hsl(var(--color-1));
-  --color-color-2: hsl(var(--color-2));
-  --color-color-3: hsl(var(--color-3));
-  --color-color-4: hsl(var(--color-4));
-  --color-color-5: hsl(var(--color-5));
-  --tracking-display: -0.03em;
-  --tracking-heading: -0.02em;
+
+  /* Stephanie brand colors — exposed as utilities */
+  --color-blue: var(--blue);
+  --color-blue-deep: var(--blue-deep);
+  --color-blue-bright: var(--blue-bright);
+  --color-yellow: var(--yellow);
+  --color-yellow-warm: var(--yellow-warm);
+
+  /* Everything square */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+
+  /* Tracking scale — mono is loosely tracked when uppercase */
+  --tracking-display: -0.01em;
+  --tracking-heading: -0.01em;
   --tracking-body: 0.01em;
-  --tracking-label: 0.08em;
+  --tracking-label: 0.12em;
+  --tracking-loose: 0.12em;
+  --tracking-mega: 0.18em;
   --max-width-container: 1280px;
 }
 
 :root {
-  --color-1: 0 100% 63%;
-  --color-2: 270 100% 63%;
-  --color-3: 210 100% 63%;
-  --color-4: 195 100% 63%;
-  --color-5: 90 100% 63%;
+  /* ----------------------------------------------------------
+     STEPHANIE — Retro-editorial boldness. Electric blue canvas.
+     One blue. White text. Yellow is the lone accent.
+     ---------------------------------------------------------- */
 
-  /* Deep Midnight — dark-only palette */
-  --background: oklch(0.058 0 0);
-  --foreground: oklch(0.961 0 0);
-  --card: oklch(0.1 0 0);
-  --card-foreground: oklch(0.961 0 0);
-  --popover: oklch(0.1 0 0);
-  --popover-foreground: oklch(0.961 0 0);
-  --primary: oklch(0.961 0 0);
-  --primary-foreground: oklch(0.058 0 0);
-  --secondary: oklch(0.15 0 0);
-  --secondary-foreground: oklch(0.961 0 0);
-  --muted: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.498 0 0);
-  --accent: oklch(0.15 0 0);
-  --accent-foreground: oklch(0.961 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.498 0 0);
-  --radius: 0.625rem;
-}
+  /* Brand primitives */
+  --blue: #1238e6;
+  --blue-deep: #0e2bb8;
+  --blue-bright: #2a55ff;
+  --yellow: #ffd60a;
+  --yellow-warm: #ffc400;
 
-@keyframes rainbow {
-  0% { background-position: 0%; }
-  100% { background-position: 200%; }
+  /* White opacity ladder */
+  --white-72: rgba(255, 255, 255, 0.72);
+  --white-56: rgba(255, 255, 255, 0.56);
+  --white-32: rgba(255, 255, 255, 0.32);
+  --white-16: rgba(255, 255, 255, 0.16);
+  --white-08: rgba(255, 255, 255, 0.08);
+
+  /* Semantic tokens (consumed by Tailwind utilities) */
+  --background: var(--blue);
+  --foreground: #ffffff;
+  --card: var(--blue-deep);
+  --card-foreground: #ffffff;
+  --popover: var(--blue-deep);
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: var(--blue);
+  --secondary: var(--white-08);
+  --secondary-foreground: #ffffff;
+  --muted: var(--white-08);
+  --muted-foreground: var(--white-56);
+  --accent: var(--yellow);
+  --accent-foreground: var(--blue);
+  --destructive: #e63946;
+  --border: var(--white-16);
+  --input: var(--white-32);
+  --ring: var(--yellow);
+  --radius: 0;
+
+  /* Grid + motion */
+  --grid-line: var(--white-08);
+  --grid-cell: 80px;
+  --grid-stroke: 1px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snap: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 400ms;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
+  html {
+    scroll-behavior: smooth;
   }
   body {
-    @apply font-sans tracking-body;
+    @apply bg-background text-foreground font-sans tracking-body;
+    /* The blueprint grid — present everywhere */
+    background-image:
+      linear-gradient(to right, var(--grid-line) var(--grid-stroke), transparent var(--grid-stroke)),
+      linear-gradient(to bottom, var(--grid-line) var(--grid-stroke), transparent var(--grid-stroke));
+    background-size: var(--grid-cell) var(--grid-cell);
+    background-attachment: fixed;
+  }
+
+  a {
+    transition: color var(--dur-base) var(--ease-out);
+  }
+  a:hover {
+    color: var(--yellow);
+  }
+}
+
+/* Subtle scroll-hint bounce — gentler than Tailwind's animate-bounce */
+@keyframes scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.animate-scroll-bounce {
+  animation: scroll-bounce 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-scroll-bounce {
+    animation: none;
+  }
+}
+
+@layer components {
+  /* Serif italic — the emotional voice */
+  .font-display {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+
+  /* Active nav state (mobile menu) — color cue only.
+     Desktop uses the animated motion indicator instead of a border. */
+  .nav-active {
+    color: var(--yellow);
+  }
+
+  /* Form fields — bottom rule only, no boxes */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--white-32);
+    color: #ffffff;
+    font-family: var(--font-mono);
+    padding: 12px 0;
+    outline: none;
+    transition: border-color var(--dur-base) var(--ease-out);
+  }
+  .field:focus {
+    border-bottom-color: var(--yellow);
+  }
+  .field::placeholder {
+    color: var(--white-32);
   }
 }

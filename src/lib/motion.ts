@@ -7,19 +7,24 @@ import { useInView, type UseInViewOptions } from "motion/react";
 /*  Shared animation variants                                          */
 /* ------------------------------------------------------------------ */
 
+/* Sharp, snappy entrance — Stephanie `--ease-out`, never bouncy. */
 export const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring" as const, stiffness: 80, damping: 20 },
+    transition: {
+      type: "tween" as const,
+      ease: [0.22, 1, 0.36, 1] as const,
+      duration: 0.4,
+    },
   },
 };
 
 export const stagger = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.12 },
+    transition: { staggerChildren: 0.08 },
   },
 };
 

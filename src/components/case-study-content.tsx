@@ -4,12 +4,32 @@ import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { assetPath, cn } from "@/lib/utils";
 import { fadeUp, stagger, useReliableInView } from "@/lib/motion";
 import type { CaseStudyData, FeatureModule } from "@/lib/projects";
-import { WavePath } from "@/components/ui/wave-path";
 import { ImageCarousel } from "@/components/ui/image-carousel";
+import { useTranslation } from "@/components/providers/language-provider";
+
+/** Hairline section divider — replaces the old interactive wave. */
+function Divider() {
+  return (
+    <div className="mx-auto max-w-[var(--max-width-container)] px-6">
+      <hr className="border-0 border-t border-border" />
+    </div>
+  );
+}
+
+/** Mono uppercase eyebrow label in yellow. */
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.p
+      className="font-mono text-xs uppercase tracking-loose text-yellow"
+      variants={fadeUp}
+    >
+      {children}
+    </motion.p>
+  );
+}
 
 function ImagePlaceholder({
   bgColor,
@@ -21,7 +41,7 @@ function ImagePlaceholder({
   return (
     <motion.div variants={fadeUp}>
       <div
-        className={cn(aspect, "w-full rounded-xl")}
+        className={cn(aspect, "w-full")}
         style={{ backgroundColor: bgColor }}
       />
     </motion.div>
@@ -46,11 +66,11 @@ function ProjectImage({
       <div
         className={cn(
           aspect,
-          "relative w-full overflow-hidden rounded-xl"
+          "relative w-full overflow-hidden border border-border"
         )}
       >
         <Image
-          src={src}
+          src={assetPath(src)}
           alt={alt}
           fill
           sizes={sizes}
@@ -62,22 +82,12 @@ function ProjectImage({
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <motion.p
-      className="text-sm uppercase tracking-widest text-muted-foreground"
-      variants={fadeUp}
-    >
-      {children}
-    </motion.p>
-  );
-}
-
 function FeatureModuleSection({
   feature,
 }: {
   feature: FeatureModule;
 }) {
+  const t = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useReliableInView(ref, { margin: "-80px" });
 
@@ -85,29 +95,26 @@ function FeatureModuleSection({
     <section className="px-6 py-24 md:py-32">
       <motion.div
         ref={ref}
-        className="mx-auto max-w-7xl"
+        className="mx-auto max-w-[var(--max-width-container)]"
         variants={stagger}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
         {/* Module header */}
         <motion.p
-          className="text-sm uppercase tracking-widest text-muted-foreground"
+          className="font-mono text-xs uppercase tracking-loose text-yellow"
           variants={fadeUp}
         >
-          Module {String(feature.moduleNumber).padStart(2, "0")}
+          {t.caseStudy.module} {String(feature.moduleNumber).padStart(2, "0")}
         </motion.p>
         <motion.h2
-          className={cn(
-            "mt-2 text-3xl tracking-heading text-foreground",
-            "md:text-4xl lg:text-5xl"
-          )}
+          className="mt-3 font-display text-4xl text-white md:text-5xl lg:text-6xl"
           variants={fadeUp}
         >
           {feature.title}
         </motion.h2>
         <motion.p
-          className="mt-3 text-lg text-muted-foreground md:text-xl"
+          className="mt-3 font-mono text-lg text-white/72"
           variants={fadeUp}
         >
           {feature.subtitle}
@@ -115,7 +122,7 @@ function FeatureModuleSection({
 
         {/* Problem context */}
         <motion.p
-          className="mt-8 max-w-3xl text-muted-foreground tracking-body"
+          className="mt-8 max-w-3xl font-mono text-white/72 tracking-body"
           variants={fadeUp}
         >
           {feature.problem}
@@ -129,13 +136,13 @@ function FeatureModuleSection({
           {feature.subFeatures.map((sf, i) => (
             <motion.div
               key={i}
-              className={cn("rounded-xl border border-border p-6", "bg-card")}
+              className="border border-border bg-card p-6"
               variants={fadeUp}
             >
-              <h4 className="text-base font-medium tracking-heading text-foreground">
+              <h4 className="font-display text-xl text-white">
                 {sf.title}
               </h4>
-              <p className="mt-2 text-sm text-muted-foreground tracking-body">
+              <p className="mt-2 font-mono text-sm text-white/72 tracking-body">
                 {sf.description}
               </p>
             </motion.div>
@@ -154,21 +161,13 @@ function FeatureModuleSection({
 
         {/* Result metric callout */}
         <motion.div
-          className={cn(
-            "mt-12 rounded-xl p-8",
-            "bg-card border border-border"
-          )}
+          className="mt-12 border-l-2 border-yellow bg-card p-8"
           variants={fadeUp}
         >
-          <p
-            className={cn(
-              "text-2xl font-medium tracking-heading text-foreground",
-              "md:text-3xl"
-            )}
-          >
+          <p className="font-display text-3xl text-yellow md:text-4xl">
             {feature.result.metric}
           </p>
-          <p className="mt-3 text-muted-foreground tracking-body">
+          <p className="mt-3 font-mono text-white/72 tracking-body">
             {feature.result.description}
           </p>
         </motion.div>
@@ -191,7 +190,7 @@ function SolutionSection({
     <section className="px-6 py-24 md:py-32">
       <motion.div
         ref={ref}
-        className="mx-auto max-w-7xl"
+        className="mx-auto max-w-[var(--max-width-container)]"
         variants={stagger}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
@@ -200,16 +199,13 @@ function SolutionSection({
           {/* Left: solution text */}
           <div>
             <motion.h2
-              className={cn(
-                "text-3xl tracking-heading text-foreground",
-                "md:text-4xl"
-              )}
+              className="font-display text-4xl text-white md:text-5xl"
               variants={fadeUp}
             >
               {solution.title}
             </motion.h2>
             <motion.p
-              className="mt-6 text-lg tracking-body text-muted-foreground md:text-xl"
+              className="mt-6 font-mono text-lg tracking-body text-white/72"
               variants={fadeUp}
             >
               {solution.description}
@@ -239,6 +235,7 @@ function SolutionSection({
 }
 
 export function CaseStudyContent({ data }: { data: CaseStudyData }) {
+  const t = useTranslation();
   const { project } = data;
 
   const headerRef = useRef<HTMLDivElement>(null);
@@ -254,21 +251,21 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
     <>
       {/* Breadcrumb */}
       <div className="px-6 pt-28">
-        <nav className="mx-auto max-w-7xl" aria-label="Breadcrumb">
+        <nav className="mx-auto max-w-[var(--max-width-container)]" aria-label="Breadcrumb">
           <motion.p
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            className="text-sm tracking-widest text-muted-foreground"
+            className="font-mono text-xs uppercase tracking-loose text-white/56"
           >
             <Link
-              href="/work"
-              className="transition-colors hover:text-foreground"
+              href="/#work"
+              className="transition-colors hover:text-yellow"
             >
-              Work
+              {t.caseStudy.breadcrumbWork}
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-foreground">{project.name}</span>
+            <span className="text-white">{project.name}</span>
           </motion.p>
         </nav>
       </div>
@@ -277,7 +274,7 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
       <section className="px-6 py-24 md:py-32">
         <motion.div
           ref={headerRef}
-          className="mx-auto max-w-7xl"
+          className="mx-auto max-w-[var(--max-width-container)]"
           variants={stagger}
           initial="hidden"
           animate={headerInView ? "visible" : "hidden"}
@@ -286,17 +283,14 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
             {/* Left: text */}
             <div>
               <motion.h1
-                className={cn(
-                  "text-4xl tracking-display text-foreground",
-                  "md:text-6xl lg:text-7xl"
-                )}
+                className="font-display text-5xl text-white md:text-7xl lg:text-[88px]"
                 variants={fadeUp}
               >
                 {project.name}
               </motion.h1>
 
               <motion.p
-                className="mt-6 text-lg tracking-body text-muted-foreground md:text-xl"
+                className="mt-6 font-mono text-lg tracking-body text-white/72"
                 variants={fadeUp}
               >
                 {data.description}
@@ -305,31 +299,31 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
               {/* Metadata */}
               <motion.dl className="mt-8 space-y-4" variants={fadeUp}>
                 <div>
-                  <dt className="text-sm uppercase tracking-widest text-muted-foreground">
-                    Role
+                  <dt className="font-mono text-xs uppercase tracking-loose text-yellow">
+                    {t.caseStudy.role}
                   </dt>
-                  <dd className="mt-1 text-foreground">{data.role}</dd>
+                  <dd className="mt-1 font-mono text-white">{data.role}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm uppercase tracking-widest text-muted-foreground">
-                    Client
+                  <dt className="font-mono text-xs uppercase tracking-loose text-yellow">
+                    {t.caseStudy.client}
                   </dt>
-                  <dd className="mt-1 text-foreground">{data.client}</dd>
+                  <dd className="mt-1 font-mono text-white">{data.client}</dd>
                 </div>
                 {data.website && (
                   <div>
-                    <dt className="text-sm uppercase tracking-widest text-muted-foreground">
-                      Website link
+                    <dt className="font-mono text-xs uppercase tracking-loose text-yellow">
+                      {t.caseStudy.websiteLink}
                     </dt>
                     <dd className="mt-1">
                       <a
                         href={data.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-foreground transition-colors hover:text-muted-foreground"
+                        className="inline-flex items-center gap-1.5 font-mono text-white transition-colors hover:text-yellow"
                       >
                         {data.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                        <ArrowUpRight size={14} />
+                        <span aria-hidden>→</span>
                       </a>
                     </dd>
                   </div>
@@ -351,7 +345,7 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
       <section className="px-6 py-24 md:py-32">
         <motion.div
           ref={problemRef}
-          className="mx-auto max-w-7xl"
+          className="mx-auto max-w-[var(--max-width-container)]"
           variants={stagger}
           initial="hidden"
           animate={problemInView ? "visible" : "hidden"}
@@ -359,9 +353,9 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
           <div className={cn("grid grid-cols-1 gap-8", data.mainProblemImageUrl && "lg:grid-cols-2 lg:gap-16")}>
             {/* Left: problem details */}
             <div>
-              <SectionLabel>Main Problem</SectionLabel>
+              <SectionLabel>{t.caseStudy.mainProblem}</SectionLabel>
               <motion.p
-                className="mt-4 text-lg tracking-body text-muted-foreground md:text-xl"
+                className="mt-4 font-mono text-lg tracking-body text-white/72"
                 variants={fadeUp}
               >
                 {data.mainProblem.description}
@@ -371,10 +365,10 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
               <div className="mt-10 space-y-8">
                 {data.mainProblem.miniProblems.map((mini, i) => (
                   <motion.div key={i} variants={fadeUp}>
-                    <h3 className="text-lg font-medium tracking-heading text-foreground">
+                    <h3 className="font-display text-xl text-white">
                       {mini.title}
                     </h3>
-                    <p className="mt-2 text-muted-foreground tracking-body">
+                    <p className="mt-2 font-mono text-white/72 tracking-body">
                       {mini.description}
                     </p>
                   </motion.div>
@@ -398,9 +392,7 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
         data.features.length > 0 &&
         data.features.map((feature) => (
           <div key={feature.moduleNumber}>
-            <div className="flex items-center justify-center">
-              <WavePath className="text-white/30" />
-            </div>
+            <Divider />
             <FeatureModuleSection feature={feature} />
           </div>
         ))}
@@ -408,23 +400,18 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
       {/* Solution Sections */}
       {data.solutions.map((solution, i) => (
         <div key={i}>
-          <div className="flex items-center justify-center">
-              <WavePath className="text-white/30" />
-            </div>
-
+          <Divider />
           <SolutionSection solution={solution} bgColor={project.bgColor} />
         </div>
       ))}
 
       {/* Results */}
-      <div className="flex items-center justify-center">
-              <WavePath className="text-white/30" />
-            </div>
+      <Divider />
 
       <section className="px-6 py-24 md:py-32">
         <motion.div
           ref={resultsRef}
-          className="mx-auto max-w-7xl"
+          className="mx-auto max-w-[var(--max-width-container)]"
           variants={stagger}
           initial="hidden"
           animate={resultsInView ? "visible" : "hidden"}
@@ -433,16 +420,13 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
             {/* Left: results text */}
             <div>
               <motion.h2
-                className={cn(
-                  "text-3xl tracking-heading text-foreground",
-                  "md:text-4xl"
-                )}
+                className="font-display text-4xl text-white md:text-5xl"
                 variants={fadeUp}
               >
-                Results
+                {t.caseStudy.results}
               </motion.h2>
               <motion.p
-                className="mt-6 text-lg tracking-body text-muted-foreground md:text-xl"
+                className="mt-6 font-mono text-lg tracking-body text-white/72"
                 variants={fadeUp}
               >
                 {data.results.description}
@@ -453,10 +437,10 @@ export function CaseStudyContent({ data }: { data: CaseStudyData }) {
                     href={data.results.documentationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-foreground transition-colors hover:text-muted-foreground"
+                    className="inline-flex items-center gap-1.5 font-mono text-white transition-colors hover:text-yellow"
                   >
-                    View Full Documentation
-                    <ArrowUpRight size={14} />
+                    {t.caseStudy.viewDocumentation}
+                    <span aria-hidden>→</span>
                   </a>
                 </motion.div>
               )}

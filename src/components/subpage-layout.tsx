@@ -1,10 +1,5 @@
-import { BGPattern } from "@/components/ui/bg-pattern";
-
 export function SubpageLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="relative min-h-screen overflow-hidden">
-      <BGPattern variant="grid" mask="fade-edges" />
-      {children}
-    </div>
-  );
+  // The blueprint grid lives on <body> globally, so the page is just a
+  // min-height wrapper now.
+  return <div className="relative min-h-screen">{children}</div>;
 }

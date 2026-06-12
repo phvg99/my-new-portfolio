@@ -2,12 +2,13 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
-import { CaseStudyContent } from "@/components/case-study-content";
-import { PROJECTS, getCaseStudyBySlug } from "@/lib/projects";
+import { LocalizedCaseStudy } from "@/components/localized-case-study";
+import { DEFAULT_LOCALE } from "@/lib/i18n/config";
+import { PROJECT_SLUGS, getCaseStudyBySlug } from "@/lib/projects";
 import { SubpageLayout } from "@/components/subpage-layout";
 
 export function generateStaticParams() {
-  return PROJECTS.map((project) => ({ slug: project.id }));
+  return PROJECT_SLUGS.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -16,7 +17,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const caseStudy = getCaseStudyBySlug(slug);
+  // Metadata is generated at build time and can't read the client locale,
+  // so it stays in the default locale (English). The visible page still
+  // switches language client-side via LocalizedCaseStudy.
+  const caseStudy = getCaseStudyBySlug(slug, DEFAULT_LOCALE);
 
   if (!caseStudy) {
     return { title: "Not Found" };
@@ -34,9 +38,11 @@ export default async function CaseStudyPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const caseStudy = getCaseStudyBySlug(slug);
+  // Build both locales at static-export time; the client wrapper selects one.
+  const en = getCaseStudyBySlug(slug, "en");
+  const pt = getCaseStudyBySlug(slug, "pt");
 
-  if (!caseStudy) {
+  if (!en || !pt) {
     notFound();
   }
 
@@ -44,7 +50,7 @@ export default async function CaseStudyPage({
     <SubpageLayout>
       <Navigation />
       <main className="pt-24">
-        <CaseStudyContent data={caseStudy} />
+        <LocalizedCaseStudy data={{ en, pt }} />
       </main>
       <Footer />
     </SubpageLayout>

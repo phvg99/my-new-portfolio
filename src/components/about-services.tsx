@@ -4,8 +4,10 @@ import { useRef } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { fadeUp, stagger, useReliableInView } from "@/lib/motion";
+import { useTranslation } from "@/components/providers/language-provider";
 
 export function AboutServices() {
+  const t = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useReliableInView(ref, { margin: "-80px" });
 
@@ -15,7 +17,7 @@ export function AboutServices() {
       <section className="px-6 py-24 md:py-32">
         <motion.div
           ref={ref}
-          className="mx-auto max-w-7xl"
+          className="mx-auto max-w-[var(--max-width-container)]"
           variants={stagger}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -23,26 +25,20 @@ export function AboutServices() {
           {/* Label + Paragraph grid */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-[200px_1fr] md:gap-12">
             <motion.p
-              className={cn(
-                "text-sm uppercase tracking-widest text-muted-foreground",
-                "pt-2"
-              )}
+              className="pt-3 font-mono text-xs uppercase tracking-mega text-yellow"
               variants={fadeUp}
             >
-              Who I am
+              {t.about.whoLabel}
             </motion.p>
 
             <motion.p
               className={cn(
-                "text-2xl font-normal leading-snug tracking-heading text-foreground",
-                "md:text-3xl lg:text-4xl"
+                "font-display text-3xl leading-tight text-white",
+                "md:text-5xl lg:text-[64px]"
               )}
               variants={fadeUp}
             >
-              I&apos;m a designer passionate about creating user-focused
-              digital solutions. Whether it&apos;s a bold website or a detailed
-              product app, I&apos;m here to make ideas shine and create
-              impactful experiences.
+              {t.about.bio}
             </motion.p>
           </div>
 

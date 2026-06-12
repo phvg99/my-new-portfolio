@@ -4,51 +4,59 @@ import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
+import { assetPath, cn } from "@/lib/utils";
 import { fadeUp, stagger, useReliableInView } from "@/lib/motion";
-import { Tilt } from "@/components/ui/tilt";
-import { PROJECTS, type Project } from "@/lib/projects";
+import { getProjects, type Project } from "@/lib/projects";
+import { useLanguage } from "@/components/providers/language-provider";
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const label = `${String(index + 1).padStart(2, "0")} / ${project.tags[0]}`;
+
   return (
-    <motion.div variants={fadeUp}>
-      <Link href={`/work/${project.id}`} className="block">
-      <Tilt rotationFactor={8} isReverse className="cursor-pointer">
+    <motion.div
+      variants={fadeUp}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "tween", ease: [0.22, 1, 0.36, 1], duration: 0.12 }}
+    >
+      <Link
+        href={`/work/${project.id}`}
+        className="group block border border-border"
+      >
+        {/* Project thumbnail — landscape */}
+        <div className="relative aspect-video overflow-hidden bg-blue-deep">
+          <Image
+            src={assetPath(project.thumbnailUrl)}
+            alt={project.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+            className="object-cover"
+          />
+        </div>
+
+        {/* Metadata footer — transparent by default, yellow fill on hover */}
         <div
           className={cn(
-            "flex flex-col overflow-hidden rounded-xl",
-            "border border-zinc-950/10 bg-white",
-            "dark:border-zinc-50/10 dark:bg-zinc-900"
+            "flex flex-col gap-1.5 bg-transparent p-4 text-white",
+            "transition-colors duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "group-hover:bg-yellow group-hover:text-blue",
           )}
         >
-          {/* Project thumbnail */}
-          <div className="relative aspect-video">
-            <Image
-              src={project.thumbnailUrl}
-              alt={project.name}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-              className="object-cover"
-            />
-          </div>
-
-          {/* Metadata */}
-          <div className="p-3">
-            <h3 className="text-sm font-medium tracking-heading text-foreground">
-              {project.name}
-            </h3>
-            <p className="text-xs text-zinc-700 dark:text-zinc-400">
-              {project.tags[0]}
-            </p>
-          </div>
+          <span className="font-mono text-xs uppercase tracking-loose text-yellow transition-colors duration-200 group-hover:text-blue">
+            {label}
+          </span>
+          <h3 className="font-mono text-lg font-medium leading-snug text-white transition-colors duration-200 group-hover:text-blue md:text-xl">
+            {project.name}
+          </h3>
         </div>
-      </Tilt>
       </Link>
     </motion.div>
   );
 }
 
 export function SelectedProjects() {
+  const { locale, t } = useLanguage();
+  const projects = getProjects(locale);
+
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingInView = useReliableInView(headingRef, { margin: "-40px" });
 
@@ -56,21 +64,17 @@ export function SelectedProjects() {
   const gridInView = useReliableInView(gridRef, { margin: "-80px" });
 
   return (
-    <section className="px-6 py-24 md:py-32">
-      <div className="mx-auto max-w-7xl">
+    <section id="work" className="scroll-mt-24 px-6 py-24 md:py-32">
+      <div className="mx-auto max-w-[var(--max-width-container)]">
         {/* Section heading */}
         <motion.h2
           ref={headingRef}
-          className={cn(
-            "text-3xl tracking-heading text-foreground",
-            "md:text-4xl lg:text-5xl",
-            "mb-12 md:mb-16"
-          )}
+          className="mb-12 font-display text-5xl text-white md:mb-16 md:text-7xl"
           variants={fadeUp}
           initial="hidden"
           animate={headingInView ? "visible" : "hidden"}
         >
-          Selected projects
+          {t.projects.heading}
         </motion.h2>
 
         {/* Project grid */}
@@ -81,8 +85,8 @@ export function SelectedProjects() {
           initial="hidden"
           animate={gridInView ? "visible" : "hidden"}
         >
-          {PROJECTS.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+          {projects.map((project, index) => (
+            <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </motion.div>
       </div>

@@ -3,8 +3,7 @@
 import { useState, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { assetPath, cn } from "@/lib/utils";
 
 interface ImageCarouselProps {
   images: string[];
@@ -63,7 +62,7 @@ export function ImageCarousel({
       <div
         className={cn(
           aspect,
-          "relative w-full overflow-hidden rounded-xl"
+          "relative w-full overflow-hidden border border-border"
         )}
         role="region"
         aria-roledescription="carousel"
@@ -79,11 +78,11 @@ export function ImageCarousel({
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
             <Image
-              src={images[current]}
+              src={assetPath(images[current])}
               alt={`${alt} — ${current + 1} of ${images.length}`}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
@@ -98,14 +97,13 @@ export function ImageCarousel({
           onClick={() => navigate(-1)}
           className={cn(
             "absolute left-3 top-1/2 z-10 -translate-y-1/2",
-            "flex h-10 w-10 items-center justify-center rounded-full",
-            "bg-background/60 backdrop-blur-sm",
-            "transition-colors hover:bg-background/80",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+            "flex h-10 w-10 items-center justify-center font-mono text-lg text-blue",
+            "bg-white transition-colors hover:bg-yellow",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           )}
           aria-label="Previous image"
         >
-          <ChevronLeft className="h-5 w-5 text-foreground" />
+          ←
         </button>
 
         {/* Right arrow */}
@@ -114,14 +112,13 @@ export function ImageCarousel({
           onClick={() => navigate(1)}
           className={cn(
             "absolute right-3 top-1/2 z-10 -translate-y-1/2",
-            "flex h-10 w-10 items-center justify-center rounded-full",
-            "bg-background/60 backdrop-blur-sm",
-            "transition-colors hover:bg-background/80",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+            "flex h-10 w-10 items-center justify-center font-mono text-lg text-blue",
+            "bg-white transition-colors hover:bg-yellow",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           )}
           aria-label="Next image"
         >
-          <ChevronRight className="h-5 w-5 text-foreground" />
+          →
         </button>
       </div>
 
@@ -133,8 +130,8 @@ export function ImageCarousel({
             type="button"
             onClick={() => setCurrent([i, i > current ? 1 : -1])}
             className={cn(
-              "h-2 w-2 rounded-full transition-colors",
-              i === current ? "bg-foreground" : "bg-foreground/30"
+              "h-2 w-2 transition-colors",
+              i === current ? "bg-yellow" : "bg-white/32"
             )}
             aria-label={`Go to image ${i + 1}`}
           />

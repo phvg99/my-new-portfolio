@@ -1,48 +1,17 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/components/providers/language-provider';
 
-const SQRT_5000 = Math.sqrt(5000);
-
-const testimonials = [
-  {
-    testimonial: "A quick grasp of project complexities and the ability to translate them into creative solutions — that's what he brings, along with a culture of collaboration and knowledge-sharing.",
-    by: "Douglas Junior, Head of Design",
-    imgSrc: "/testimonials/douglas-junior.jpg",
-  },
-  {
-    testimonial: "A keen eye for detail and a focus on real user experience. Collaborative, reliable, and delivers with quality.",
-    by: "Alex Minoru Abe, Product Designer & Developer",
-    imgSrc: "/testimonials/alex-minoru-abe.jpg",
-  },
-  {
-    testimonial: "Fresh perspectives, complex flows built from scratch, and always receptive to feedback. You'll want him on the team.",
-    by: "Richard de Souza, Developer",
-    imgSrc: "/testimonials/richard-de-souza.jpg",
-  },
-  {
-    testimonial: "Curiosity drives his problem-solving, clarity guides his design, and the user's real context is always top of mind. Collaborative and solution-oriented.",
-    by: "Marcelo Antonietto, Lead Product Designer",
-    imgSrc: "/testimonials/marcelo-antonietto.jpg",
-  },
-  {
-    testimonial: "Contagious energy and good vibes — always dedicated, always delivering excellent work. A great designer to have as a teammate.",
-    by: "José Marcolino, UX Researcher",
-    imgSrc: "/testimonials/jose-marcolino.jpg",
-  },
-  {
-    testimonial: "He structured our complete design system — colors, typography, components — all well documented. Made it simple for devs to build.",
-    by: "Renan Rocha, Developer",
-    imgSrc: "/testimonials/renan-rocha.jpg",
-  },
-];
+interface Testimonial {
+  testimonial: string;
+  by: string;
+}
 
 interface TestimonialCardProps {
   position: number;
-  testimonial: typeof testimonials[0];
+  testimonial: Testimonial;
   onClick: () => void;
   cardSize: number;
   spacing: number;
@@ -61,53 +30,28 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
     <div
       onClick={onClick}
       className={cn(
-        "absolute left-1/2 top-1/2 flex flex-col cursor-pointer border-2 p-8 transition-all duration-500 ease-in-out",
+        "absolute left-1/2 top-1/2 flex flex-col cursor-pointer border p-8 transition-[transform,background-color,border-color] duration-300",
         isCenter
-          ? "z-10 bg-primary text-primary-foreground border-primary"
-          : "z-0 bg-card text-card-foreground border-border hover:border-primary/50"
+          ? "z-10 border-yellow bg-yellow text-blue"
+          : "z-0 border-border bg-card text-white hover:border-yellow"
       )}
       style={{
         width: cardSize,
         height: cardSize,
         willChange: "transform",
-        clipPath: `polygon(50px 0%, calc(100% - 50px) 0%, 100% 50px, 100% 100%, calc(100% - 50px) 100%, 50px 100%, 0 100%, 0 0)`,
-        transform: `
-          translate(-50%, -50%)
-          translateX(${spacing * position}px)
-          translateY(${isCenter ? -65 : position % 2 ? 15 : -15}px)
-          rotate(${isCenter ? 0 : position % 2 ? 2.5 : -2.5}deg)
-        `,
-        boxShadow: isCenter ? "0px 8px 0px 4px hsl(var(--border))" : "0px 0px 0px 0px transparent"
+        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+        transform: `translate(-50%, -50%) translateX(${spacing * position}px)`,
       }}
     >
-      <span
-        className="absolute block origin-top-right rotate-45 bg-border"
-        style={{
-          right: -2,
-          top: 48,
-          width: SQRT_5000,
-          height: 2
-        }}
-      />
-      <Image
-        src={testimonial.imgSrc}
-        alt={testimonial.by.split(',')[0]}
-        width={48}
-        height={56}
-        className="mb-4 h-14 w-12 bg-muted object-cover object-top"
-        style={{
-          boxShadow: "3px 3px 0px hsl(var(--background))"
-        }}
-      />
       <h3 className={cn(
-        "flex-1 overflow-hidden text-base sm:text-xl font-medium",
-        isCenter ? "text-primary-foreground" : "text-foreground"
+        "flex-1 overflow-hidden font-mono text-sm sm:text-base lg:text-lg leading-snug",
+        isCenter ? "text-blue" : "text-white"
       )}>
         &ldquo;{testimonial.testimonial}&rdquo;
       </h3>
       <p className={cn(
-        "mt-auto pt-2 text-sm italic",
-        isCenter ? "text-primary-foreground/80" : "text-muted-foreground"
+        "mt-auto pt-2 font-display text-base",
+        isCenter ? "text-blue/80" : "text-white/56"
       )}>
         - {testimonial.by}
       </p>
@@ -116,6 +60,9 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 };
 
 export const StaggerTestimonials: React.FC = () => {
+  const t = useTranslation();
+  const testimonials = t.testimonials.items;
+
   const [cardSize, setCardSize] = useState<number | null>(null);
   const [viewportWidth, setViewportWidth] = useState<number>(1280);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -154,7 +101,7 @@ export const StaggerTestimonials: React.FC = () => {
   }, []);
 
   if (cardSize === null) {
-    return <div className="relative w-full bg-muted/30" style={{ height: 600 }} />;
+    return <div className="relative w-full" style={{ height: 600 }} />;
   }
 
   const baseSpacing = cardSize / 1.5;
@@ -163,7 +110,7 @@ export const StaggerTestimonials: React.FC = () => {
 
   return (
     <div
-      className="relative w-full overflow-hidden bg-muted/30"
+      className="relative w-full overflow-hidden"
       style={{ height: 600 }}
     >
       {testimonials.map((testimonial, i) => {
@@ -184,24 +131,24 @@ export const StaggerTestimonials: React.FC = () => {
         <button
           onClick={() => handleMove(-1)}
           className={cn(
-            "flex h-14 w-14 items-center justify-center text-2xl transition-colors",
-            "bg-background border-2 border-border hover:bg-primary hover:text-primary-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            "flex h-14 w-14 items-center justify-center font-mono text-2xl text-white transition-colors",
+            "border border-border bg-transparent hover:bg-yellow hover:text-blue",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           )}
-          aria-label="Previous testimonial"
+          aria-label={t.testimonials.prevAria}
         >
-          <ChevronLeft />
+          ←
         </button>
         <button
           onClick={() => handleMove(1)}
           className={cn(
-            "flex h-14 w-14 items-center justify-center text-2xl transition-colors",
-            "bg-background border-2 border-border hover:bg-primary hover:text-primary-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            "flex h-14 w-14 items-center justify-center font-mono text-2xl text-white transition-colors",
+            "border border-border bg-transparent hover:bg-yellow hover:text-blue",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           )}
-          aria-label="Next testimonial"
+          aria-label={t.testimonials.nextAria}
         >
-          <ChevronRight />
+          →
         </button>
       </div>
     </div>

@@ -43,3 +43,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Internal design/reference material — not part of the deployed app
+/references/
+/references\ /
