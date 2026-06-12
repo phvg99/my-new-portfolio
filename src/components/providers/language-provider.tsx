@@ -25,9 +25,17 @@ import { dictionaries, type Dictionary } from "@/lib/i18n/dictionaries";
 let cachedLocale: Locale | null = null;
 const listeners = new Set<() => void>();
 
+/* Web Storage can throw (SecurityError) when a privacy-strict browser — e.g.
+   Firefox/Zen with site storage blocked, or a hardened private window — denies
+   access. `getSnapshot` runs during hydration render, so an unguarded throw here
+   crashes hydration of the whole app. Always fail safe. */
 function readStoredLocale(): Locale {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return isLocale(stored) ? stored : DEFAULT_LOCALE;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return isLocale(stored) ? stored : DEFAULT_LOCALE;
+  } catch {
+    return DEFAULT_LOCALE;
+  }
 }
 
 function getSnapshot(): Locale {
@@ -49,16 +57,30 @@ function subscribe(callback: () => void): () => void {
       listeners.forEach((listener) => listener());
     }
   };
-  window.addEventListener("storage", onStorage);
+  try {
+    window.addEventListener("storage", onStorage);
+  } catch {
+    /* cross-tab sync unavailable — non-fatal */
+  }
   return () => {
     listeners.delete(callback);
-    window.removeEventListener("storage", onStorage);
+    try {
+      window.removeEventListener("storage", onStorage);
+    } catch {
+      /* no-op */
+    }
   };
 }
 
 function writeLocale(next: Locale): void {
+  // Update in-memory state and notify subscribers regardless of whether
+  // persistence succeeds, so the language switch always works in-session.
   cachedLocale = next;
-  localStorage.setItem(STORAGE_KEY, next);
+  try {
+    localStorage.setItem(STORAGE_KEY, next);
+  } catch {
+    /* persistence blocked — selection still applies for this session */
+  }
   listeners.forEach((listener) => listener());
 }
 

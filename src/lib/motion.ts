@@ -46,15 +46,29 @@ export function useReliableInView(
 
   useEffect(() => {
     if (seen.current) return;
-    requestAnimationFrame(() => {
-      if (ref.current) {
-        const rect = ref.current.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          setMountVisible(true);
-          if (once) seen.current = true;
-        }
+
+    // Reveals the element once it enters the viewport, measured directly.
+    // Acts as a self-healing fallback: if the underlying IntersectionObserver
+    // never fires (engine quirk, blocked API), scrolling still reveals content
+    // rather than stranding it at opacity:0 — while preserving scroll-reveal.
+    const check = () => {
+      if (seen.current || !ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        setMountVisible(true);
+        if (once) seen.current = true;
+        window.removeEventListener("scroll", check);
+        window.removeEventListener("resize", check);
       }
-    });
+    };
+
+    requestAnimationFrame(check);
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+    };
   }, [ref, once]);
 
   return framerInView || mountVisible;
